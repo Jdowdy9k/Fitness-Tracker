@@ -16,14 +16,49 @@ app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/userdb", { useNewUrlParser: true });
 
-app.post("/submit", ({ body }, res) => {
-  User.create(body)
-    .then(dbUser => {
-      res.json(dbUser);
-    })
-    .catch(err => {
-      res.json(err);
-    });
+//script to initially seed database
+
+ //const { Seeder } = require('mongo-seeding')
+ //const config = {
+ //  database: {
+ //    name: 'workout',
+ //  },
+ //  dropDatabase: true,
+ //};
+ //const seeder = new Seeder(config);
+ //const collections = seeder.readCollectionsFromPath(
+ //  path.resolve("\seeders"),
+ //  {
+ //    transformers: [Seeder.Transformers.replaceDocumentIdWithUnderscoreId],
+ //  },
+ //);
+//
+// seeder
+   .import(collections)
+   .then(() => {
+     console.log('Success');
+   })
+   .catch(err => {
+     console.log('Error', err);
+   });
+
+// routes
+app.use(require("./routes/routes.js"));
+
+app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname, "./public/index.html"));
+});
+
+app.get("/exercise", function (req, res) {
+    res.sendFile(path.join(__dirname, "./public/excercise.html"));
+});
+
+app.get("/exercise?", function (req, res) {
+    res.sendFile(path.join(__dirname, "./public/excercise.html"));
+});
+
+app.get("/stats", function (req, res) {
+    res.sendFile(path.join(__dirname, "./public/stats.html"));
 });
 
 app.listen(PORT, () => {
