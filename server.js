@@ -3,11 +3,11 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 var path = require("path");
 
-const PORT = process.env.PORT || 3030;
+const PORT = process.env.PORT || 3031;
 const app = express();
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-const Workout = require("./models/workout");
+const Workout = require("./models/workout.js");
 
 app.use(logger("dev"));
 app.use(express.urlencoded({ extended: true }));
@@ -16,12 +16,9 @@ app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/userdb", { useNewUrlParser: true });
 
-app.use(require("./routes/apiRoutes"));
-app.use(require("./routes/htmlRoutes"));
-
+app.use(require("./routes/routes.js"));
 
 // routes
-//app.use(require("./routes/routes.js"));
 
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "./public/index.html"));
