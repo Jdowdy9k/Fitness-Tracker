@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://user1:password1@ds221242.mlab.com:21242/heroku_fph29cbd", {
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
      useNewUrlParser: true,
      useFindAndModify: false
 }).then(function(){
@@ -23,7 +23,6 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://user1:password1@ds221242.
     console.log(err)
 })
 
-app.use(require("./routes/routes.js"));
 
 // routes
 
@@ -43,6 +42,8 @@ app.get("/stats", function (req, res) {
     res.sendFile(path.join(__dirname, "./public/stats.html"));
 });
 
+app.use(require("./routes/apiRoutes.js"));
+app.use(require("./routes/htmlRoutes.js"));
 
 app.listen(PORT,function(){ 
     console.log(`App listening on Port ${PORT}`);
